@@ -1,0 +1,54 @@
+spring:
+  application:
+    name: RegisterFoot
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/registerfoot?useSSL=false&serverTimezone=America/Bogota&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
+    username: ${DB_USER:root}
+    password: ${DB_PASSWORD:root}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none              # el esquema lo crea schema.sql (no Hibernate)
+    defer-datasource-initialization: false
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+    open-in-view: false
+  sql:
+    init:
+      mode: always                # ejecuta schema.sql + data.sql al arrancar
+      schema-locations: classpath:db/schema.sql
+      data-locations: classpath:db/seed.sql
+      continue-on-error: true
+  # JavaFX no es una app web
+  main:
+    web-application-type: none
+
+# ----------------------------------------------------------------------
+# Configuracion propia de la aplicacion
+# ----------------------------------------------------------------------
+registerfoot:
+  biometric:
+    # provider activo: MOCK | ZKTECO | SUPREMA | ANVIZ | HIKVISION
+    provider: MOCK
+    polling-millis: 800
+    device-ip: 192.168.1.201
+    device-port: 4370
+  printing:
+    # backend activo: ESC_POS | JAVA_PRINT | MOCK
+    backend: MOCK
+    printer-name: ""        # vacio => impresora por defecto del SO
+    char-per-line: 42
+    company-name: "RegisterFoot S.A.S."
+    company-nit: "900.123.456-7"
+  security:
+    session-timeout-minutes: 30
+    max-login-attempts: 5
+
+logging:
+  level:
+    root: INFO
+    com.registerfoot: DEBUG
+    org.hibernate.SQL: WARN

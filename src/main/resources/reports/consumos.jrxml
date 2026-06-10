@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="consumos" pageWidth="595" pageHeight="842" columnWidth="555"
+              leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+
+    <parameter name="DESDE" class="java.lang.String"/>
+    <parameter name="HASTA" class="java.lang.String"/>
+    <parameter name="TOTAL" class="java.math.BigDecimal"/>
+
+    <field name="numero" class="java.lang.String"/>
+    <field name="fecha" class="java.lang.String"/>
+    <field name="hora" class="java.lang.String"/>
+    <field name="empleado" class="java.lang.String"/>
+    <field name="documento" class="java.lang.String"/>
+    <field name="tipoComida" class="java.lang.String"/>
+    <field name="concesion" class="java.lang.String"/>
+    <field name="valor" class="java.math.BigDecimal"/>
+
+    <title>
+        <band height="60">
+            <staticText>
+                <reportElement x="0" y="0" width="555" height="24"/>
+                <textElement textAlignment="Center"><font size="16" isBold="true"/></textElement>
+                <text><![CDATA[RegisterFoot - Reporte de Consumos]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="0" y="30" width="555" height="16"/>
+                <textElement textAlignment="Center"><font size="10"/></textElement>
+                <textFieldExpression><![CDATA["Periodo: " + $P{DESDE} + " a " + $P{HASTA}]]></textFieldExpression>
+            </textField>
+        </band>
+    </title>
+
+    <columnHeader>
+        <band height="20">
+            <staticText><reportElement x="0"   y="0" width="70"  height="20"/><textElement><font isBold="true"/></textElement><text><![CDATA[Ticket]]></text></staticText>
+            <staticText><reportElement x="70"  y="0" width="60"  height="20"/><textElement><font isBold="true"/></textElement><text><![CDATA[Fecha]]></text></staticText>
+            <staticText><reportElement x="130" y="0" width="40"  height="20"/><textElement><font isBold="true"/></textElement><text><![CDATA[Hora]]></text></staticText>
+            <staticText><reportElement x="170" y="0" width="130" height="20"/><textElement><font isBold="true"/></textElement><text><![CDATA[Empleado]]></text></staticText>
+            <staticText><reportElement x="300" y="0" width="70"  height="20"/><textElement><font isBold="true"/></textElement><text><![CDATA[Documento]]></text></staticText>
+            <staticText><reportElement x="370" y="0" width="70"  height="20"/><textElement><font isBold="true"/></textElement><text><![CDATA[Comida]]></text></staticText>
+            <staticText><reportElement x="440" y="0" width="60"  height="20"/><textElement><font isBold="true"/></textElement><text><![CDATA[Conces.]]></text></staticText>
+            <staticText><reportElement x="500" y="0" width="55"  height="20"/><textElement textAlignment="Right"><font isBold="true"/></textElement><text><![CDATA[Valor]]></text></staticText>
+        </band>
+    </columnHeader>
+
+    <detail>
+        <band height="16">
+            <textField><reportElement x="0"   y="0" width="70"  height="16"/><textFieldExpression><![CDATA[$F{numero}]]></textFieldExpression></textField>
+            <textField><reportElement x="70"  y="0" width="60"  height="16"/><textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression></textField>
+            <textField><reportElement x="130" y="0" width="40"  height="16"/><textFieldExpression><![CDATA[$F{hora}]]></textFieldExpression></textField>
+            <textField><reportElement x="170" y="0" width="130" height="16"/><textFieldExpression><![CDATA[$F{empleado}]]></textFieldExpression></textField>
+            <textField><reportElement x="300" y="0" width="70"  height="16"/><textFieldExpression><![CDATA[$F{documento}]]></textFieldExpression></textField>
+            <textField><reportElement x="370" y="0" width="70"  height="16"/><textFieldExpression><![CDATA[$F{tipoComida}]]></textFieldExpression></textField>
+            <textField><reportElement x="440" y="0" width="60"  height="16"/><textFieldExpression><![CDATA[$F{concesion}]]></textFieldExpression></textField>
+            <textField pattern="#,##0"><reportElement x="500" y="0" width="55" height="16"/><textElement textAlignment="Right"/><textFieldExpression><![CDATA[$F{valor}]]></textFieldExpression></textField>
+        </band>
+    </detail>
+
+    <summary>
+        <band height="30">
+            <staticText><reportElement x="370" y="6" width="130" height="20"/><textElement textAlignment="Right"><font isBold="true"/></textElement><text><![CDATA[TOTAL:]]></text></staticText>
+            <textField pattern="#,##0"><reportElement x="500" y="6" width="55" height="20"/><textElement textAlignment="Right"><font isBold="true"/></textElement><textFieldExpression><![CDATA[$P{TOTAL}]]></textFieldExpression></textField>
+        </band>
+    </summary>
+</jasperReport>

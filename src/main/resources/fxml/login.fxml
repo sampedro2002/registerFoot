@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.registerfoot.ui.controller.LoginController"
+      alignment="CENTER" spacing="16" styleClass="login-root">
+    <padding><Insets top="40" right="40" bottom="40" left="40"/></padding>
+
+    <Label text="RegisterFoot" styleClass="login-title"/>
+    <Label text="Sistema de Tickets de Alimentacion" styleClass="login-subtitle"/>
+
+    <VBox spacing="10" maxWidth="300">
+        <Label text="Usuario"/>
+        <TextField fx:id="username" promptText="usuario"/>
+        <Label text="Contrasena"/>
+        <PasswordField fx:id="password" promptText="********"/>
+    </VBox>
+
+    <Button fx:id="btnLogin" text="Ingresar" onAction="#onLogin"
+            styleClass="btn-primary" maxWidth="300"/>
+
+    <Label fx:id="mensaje" styleClass="login-error" wrapText="true"/>
+
+    <Label text="admin / admin123" styleClass="login-hint"/>
+</VBox>

@@ -1,0 +1,55 @@
+/* RegisterFoot - tema moderno (paleta indigo/slate) */
+.root {
+    -fx-font-family: "Segoe UI", "Roboto", sans-serif;
+    -fx-font-size: 13px;
+    -fx-background-color: #f1f5f9;
+}
+
+/* Login */
+.login-root { -fx-background-color: linear-gradient(to bottom right, #4f46e5, #0ea5e9); }
+.login-title { -fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: white; }
+.login-subtitle { -fx-font-size: 13px; -fx-text-fill: #e0e7ff; }
+.login-error { -fx-text-fill: #fecaca; -fx-font-size: 12px; }
+.login-hint { -fx-text-fill: #c7d2fe; -fx-font-size: 11px; }
+.login-root .label { -fx-text-fill: white; }
+.login-root .text-field, .login-root .password-field {
+    -fx-background-radius: 6; -fx-padding: 8;
+}
+
+/* Botones */
+.btn-primary {
+    -fx-background-color: #4f46e5; -fx-text-fill: white; -fx-font-weight: bold;
+    -fx-background-radius: 6; -fx-padding: 9 16; -fx-cursor: hand;
+}
+.btn-primary:hover { -fx-background-color: #4338ca; }
+.btn-ghost {
+    -fx-background-color: transparent; -fx-text-fill: #e2e8f0;
+    -fx-alignment: CENTER_LEFT; -fx-padding: 10 16; -fx-cursor: hand; -fx-font-size: 13px;
+}
+.btn-ghost:hover { -fx-background-color: #334155; }
+.btn-active { -fx-background-color: #4f46e5; -fx-text-fill: white; }
+
+/* Sidebar */
+.sidebar { -fx-background-color: #1e293b; -fx-min-width: 210; -fx-pref-width: 210; }
+.sidebar-brand { -fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 18; }
+.sidebar-user { -fx-text-fill: #94a3b8; -fx-font-size: 11px; -fx-padding: 0 16 12 16; }
+
+/* Contenido */
+.content { -fx-padding: 22; }
+.page-title { -fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #0f172a; }
+
+/* Tarjetas KPI */
+.kpi-card {
+    -fx-background-color: white; -fx-background-radius: 10; -fx-padding: 18;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);
+}
+.kpi-value { -fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #4f46e5; }
+.kpi-label { -fx-font-size: 12px; -fx-text-fill: #64748b; }
+
+/* Tablas */
+.table-view { -fx-background-radius: 8; }
+
+/* Consola de consumo */
+.consume-ok { -fx-text-fill: #16a34a; -fx-font-weight: bold; -fx-font-size: 16px; }
+.consume-bad { -fx-text-fill: #dc2626; -fx-font-weight: bold; -fx-font-size: 16px; }
+.ticket-preview { -fx-font-family: "monospace"; -fx-background-color: white; -fx-padding: 12; }

@@ -1,0 +1,64 @@
+# --- JAVA & MAVEN ---
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# --- INTELLIJ IDEA ---
+.idea/*.local.xml
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/usage.statistics.xml
+.idea/dictionaries
+.idea/libraries
+.idea/shelf
+.idea/contentModel.xml
+*.iml
+*.ipr
+*.iws
+
+# Mantener configuraciones de ejecución si son compartidas
+!.idea/runConfigurations/
+!.idea/runConfigurations/*.xml
+
+# --- ECLIPSE ---
+.settings/
+.project
+.classpath
+.factorypath
+
+# --- VS CODE ---
+.vscode/
+
+# --- SISTEMA OPERATIVO ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- LOGS & TEMP ---
+*.log
+logs/
+temp/
+tmp/
+
+# --- REPORTES Y RECURSOS ---
+*.pdf
+*.xlsx
+# No ignorar plantillas de JasperReports
+!src/main/resources/reports/*.jrxml
+
+# --- OTROS ---
+.claude/settings.local.json
