@@ -62,3 +62,9 @@ tmp/
 
 # --- OTROS ---
 .claude/settings.local.json
+
+# --- AI TOOLS ---
+CLAUDE.md
+.claude/
+AI.md
+*.ai.md
