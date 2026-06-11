@@ -12,7 +12,7 @@ set SQL_DIR=%SCRIPT_DIR%src\main\resources\db
 if not defined DB_HOST set DB_HOST=localhost
 if not defined DB_PORT set DB_PORT=3306
 if not defined DB_USER set DB_USER=root
-if not defined DB_PASSWORD set DB_PASSWORD=root
+if not defined DB_PASSWORD set DB_PASSWORD=BN2002sg
 set DB_NAME=registerfoot
 
 echo === RegisterFoot — Inicializando base de datos ===

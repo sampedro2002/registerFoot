@@ -12,7 +12,7 @@ SQL_DIR="$SCRIPT_DIR/src/main/resources/db"
 DB_HOST="${DB_HOST:-localhost}"
 DB_PORT="${DB_PORT:-3306}"
 DB_USER="${DB_USER:-root}"
-DB_PASSWORD="${DB_PASSWORD:-root}"
+DB_PASSWORD="${DB_PASSWORD:-BN2002sg}"
 DB_NAME="registerfoot"
 
 MYSQL_OPTS=(-h "$DB_HOST" -P "$DB_PORT" -u "$DB_USER" --password="$DB_PASSWORD")
