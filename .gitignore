@@ -79,3 +79,34 @@ CLAUDE.md
 .claude/
 AI.md
 *.ai.md
+
+# --- LINUX ---
+*~
+.directory
+.Trash-*
+.nfs*
+.cache/
+.local/share/Trash/
+
+# --- ENVIRONMENT VARIABLES ---
+.env
+.env.local
+.env.*.local
+application-local.yml
+application-local.properties
+
+# --- MAVEN LOCAL ---
+.mvn/
+.m2/
+
+# --- SPRING BOOT LOCAL ---
+spring.log
+
+# --- DATABASE ---
+*.sql.bak
+*.db
+*.sqlite
+
+# --- IDE CONFIGURATION (LOCAL) ---
+.idea/runConfigurations/*_local.xml
+.idea/dataSources.local.xml

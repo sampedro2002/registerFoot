@@ -78,19 +78,92 @@ Creadas automáticamente al primer arranque (`config/DataInitializer.java`):
 
 Requisitos: **JDK 17+**, **Maven**, **MySQL 8** en ejecución.
 
-```bash
-# 1. Crear/usar la BD (la URL incluye createDatabaseIfNotExist=true)
-#    Ajuste credenciales por variables de entorno si es necesario:
-export DB_USER=root DB_PASSWORD=tu_clave
+### 5.1 Configuración de credenciales MySQL
 
-# 2. Ejecutar (usa el Maven Wrapper incluido; no requiere Maven instalado)
+Edite `src/main/resources/application.yml` con sus credenciales reales:
+
+```yaml
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/registerfoot?useSSL=false&serverTimezone=America/Bogota&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
+    username: root          # cambie por su usuario MySQL
+    password: tu_clave      # cambie por su contraseña MySQL
+```
+
+**Alternativa por variables de entorno** (recomendado para producción):
+
+```bash
+# Linux/Mac
+export DB_USER=root
+export DB_PASSWORD=tu_clave
+
+# Windows (CMD)
+set DB_USER=root
+set DB_PASSWORD=tu_clave
+
+# Windows (PowerShell)
+$env:DB_USER="root"
+$env:DB_PASSWORD="tu_clave"
+```
+
+Si usa variables de entorno, actualice `application.yml`:
+
+```yaml
+spring:
+  datasource:
+    username: ${DB_USER:root}
+    password: ${DB_PASSWORD:root}
+```
+
+### 5.2 Ejecución desde terminal
+
+```bash
+# Ejecutar (usa el Maven Wrapper incluido; no requiere Maven instalado)
 ./mvnw javafx:run
-#   o bien
-./mvnw spring-boot:run
 ```
 
 El esquema (`db/schema.sql`) y los datos de prueba (`db/seed.sql`) se cargan
 solos al arrancar.
+
+### 5.3 Ejecución desde IntelliJ IDEA
+
+El proyecto incluye una configuración de ejecución predefinida:
+
+1. **Abrir el proyecto** en IntelliJ IDEA
+2. Ir a **Run → Edit Configurations**
+3. Seleccionar **"RegisterFoot (App)"** (ya creada automáticamente)
+4. Hacer clic en **Run** (▶)
+
+Si la configuración no aparece, créela manualmente:
+
+1. **Run → Edit Configurations → + → Application**
+2. Configure los siguientes campos:
+   - **Name**: `RegisterFoot (App)`
+   - **Main class**: `com.registerfoot.RegisterFootApplication`
+   - **Module**: `register-foot`
+3. Haga clic en **OK** y ejecute
+
+> **Nota**: Si aparece error de JavaFX, agregue en **VM options**:
+> ```
+> --module-path "RUTA_A_TU_M2/org/openjfx/javafx-controls/21.0.2/javafx-controls-21.0.2-win.jar;RUTA_A_TU_M2/org/openjfx/javafx-graphics/21.0.2/javafx-graphics-21.0.2-win.jar;RUTA_A_TU_M2/org/openjfx/javafx-base/21.0.2/javafx-base-21.0.2-win.jar;RUTA_A_TU_M2/org/openjfx/javafx-fxml/21.0.2/javafx-fxml-21.0.2-win.jar" --add-modules javafx.controls,javafx.fxml
+> ```
+> Reemplace `RUTA_A_TU_M2` con la ruta a su repositorio Maven (ej: `C:\Users\TuUsuario\.m2\repository` en Windows o `~/.m2/repository` en Linux/Mac)
+
+### 5.4 Configuración para Linux/Mac
+
+Si mueve el proyecto a Linux o Mac, configure las variables de entorno en su `~/.bashrc` o `~/.zshrc`:
+
+```bash
+export DB_USER=root
+export DB_PASSWORD=tu_clave
+```
+
+O cree un archivo `.env` en la raíz del proyecto (ignorado por git):
+
+```bash
+DB_USER=root
+DB_PASSWORD=tu_clave
+```
 
 ## 6. Configuración (`src/main/resources/application.yml`)
 

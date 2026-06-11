@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * horario que cubra la hora actual.
  */
 @SpringBootTest
+@ActiveProfiles("test")
 @EnabledIfEnvironmentVariable(named = "DB_USER", matches = ".+")
 class ConsumoFlowLiveTest {
 
