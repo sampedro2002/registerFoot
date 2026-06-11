@@ -1,0 +1,215 @@
+======================================================================
+  RegisterFoot - ESTRUCTURA DE BASE DE DATOS (MySQL 8)
+  Sistema de gestion de tickets de alimentacion biometricos
+======================================================================
+
+TABLA: usuarios
+  Autenticacion y roles del sistema
+  ------------------------------------------------------------------
+  id              BIGINT PK AUTO_INCREMENT
+  username        VARCHAR(60)   NOT NULL UNIQUE
+  password_hash   VARCHAR(255)  NOT NULL
+  nombre_completo VARCHAR(150)  NOT NULL
+  email           VARCHAR(120)
+  rol             VARCHAR(20)   NOT NULL    [ADMINISTRADOR|SUPERVISOR|OPERADOR|AUDITOR]
+  activo          BOOLEAN       NOT NULL DEFAULT TRUE
+  intentos_fallidos INT         NOT NULL DEFAULT 0
+  ultimo_acceso   DATETIME
+  creado_en       DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP
+  actualizado_en  DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  INDEX: idx_usuarios_rol (rol)
+
+TABLA: concesiones
+  Empresas/contratos que pagan la alimentacion
+  ------------------------------------------------------------------
+  id              BIGINT PK AUTO_INCREMENT
+  codigo          VARCHAR(30)   NOT NULL UNIQUE
+  nombre          VARCHAR(150)  NOT NULL
+  nit             VARCHAR(30)
+  contacto        VARCHAR(120)
+  telefono        VARCHAR(30)
+  activo          BOOLEAN       NOT NULL DEFAULT TRUE
+  creado_en       DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP
+  actualizado_en  DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+
+TABLA: tipos_comida
+  Tipos de comida (desayuno, almuerzo, cena, refrigerio...)
+  ------------------------------------------------------------------
+  id              BIGINT PK AUTO_INCREMENT
+  codigo          VARCHAR(30)   NOT NULL UNIQUE
+  nombre          VARCHAR(80)   NOT NULL
+  valor           DECIMAL(12,2) NOT NULL DEFAULT 0
+  activo          BOOLEAN       NOT NULL DEFAULT TRUE
+  creado_en       DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP
+  actualizado_en  DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+
+TABLA: horarios_comida
+  Ventana horaria valida por tipo de comida
+  ------------------------------------------------------------------
+  id              BIGINT PK AUTO_INCREMENT
+  tipo_comida_id  BIGINT        NOT NULL FK -> tipos_comida.id
+  hora_inicio     TIME          NOT NULL
+  hora_fin        TIME          NOT NULL
+  activo          BOOLEAN       NOT NULL DEFAULT TRUE
+  creado_en       DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP
+
+TABLA: categorias_personal
+  Definen el limite de consumos por dia por empleado
+  ------------------------------------------------------------------
+  id              BIGINT PK AUTO_INCREMENT
+  codigo          VARCHAR(30)   NOT NULL UNIQUE
+  nombre          VARCHAR(80)   NOT NULL
+  limite_diario   INT           NOT NULL DEFAULT 1
+  activo          BOOLEAN       NOT NULL DEFAULT TRUE
+  creado_en       DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP
+
+TABLA: empleados
+  Personal registrado con codigo biometrico
+  ------------------------------------------------------------------
+  id                  BIGINT PK AUTO_INCREMENT
+  codigo_biometrico   VARCHAR(60)   NOT NULL UNIQUE
+  documento           VARCHAR(30)   NOT NULL UNIQUE
+  nombres             VARCHAR(100)  NOT NULL
+  apellidos           VARCHAR(100)  NOT NULL
+  cargo               VARCHAR(80)
+  concesion_id        BIGINT        NOT NULL FK -> concesiones.id
+  categoria_id        BIGINT        FK -> categorias_personal.id
+  estado              VARCHAR(20)   NOT NULL DEFAULT 'ACTIVO'  [ACTIVO|INACTIVO|SUSPENDIDO]
+  creado_en           DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP
+  actualizado_en      DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  INDEX: idx_empleado_biometrico (codigo_biometrico)
+  INDEX: idx_empleado_nombre (apellidos, nombres)
+
+TABLA: registros_alimentacion
+  Cada transaccion de consumo de comida
+  ------------------------------------------------------------------
+  id              BIGINT PK AUTO_INCREMENT
+  empleado_id     BIGINT         NOT NULL FK -> empleados.id
+  tipo_comida_id  BIGINT         NOT NULL FK -> tipos_comida.id
+  concesion_id    BIGINT         NOT NULL FK -> concesiones.id
+  fecha           DATE           NOT NULL
+  hora            TIME           NOT NULL
+  valor           DECIMAL(12,2)  NOT NULL DEFAULT 0
+  origen          VARCHAR(20)    NOT NULL DEFAULT 'BIOMETRICO'  [BIOMETRICO|MANUAL]
+  usuario_id      BIGINT         FK -> usuarios.id
+  creado_en       DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP
+  INDEX: idx_reg_fecha (fecha)
+  INDEX: idx_reg_empleado_fecha (empleado_id, fecha)
+
+TABLA: control_consumo
+  1 fila por consumo; secuencia 1..N en el dia
+  Garantiza limite diario: UNIQUE(empleado_id, fecha, secuencia)
+  ------------------------------------------------------------------
+  id              BIGINT PK AUTO_INCREMENT
+  empleado_id     BIGINT         NOT NULL FK -> empleados.id
+  tipo_comida_id  BIGINT         NOT NULL FK -> tipos_comida.id
+  fecha           DATE           NOT NULL
+  secuencia       INT            NOT NULL
+  registro_id     BIGINT         NOT NULL FK -> registros_alimentacion.id
+  creado_en       DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP
+  UNIQUE: uq_control (empleado_id, fecha, secuencia)
+
+TABLA: tickets
+  Tickets generados/imprimibles con QR
+  ------------------------------------------------------------------
+  id              BIGINT PK AUTO_INCREMENT
+  numero          VARCHAR(40)    NOT NULL UNIQUE
+  registro_id     BIGINT         NOT NULL FK -> registros_alimentacion.id
+  empleado_id     BIGINT         NOT NULL FK -> empleados.id
+  tipo_comida_id  BIGINT         NOT NULL FK -> tipos_comida.id
+  concesion_id    BIGINT         NOT NULL FK -> concesiones.id
+  fecha_hora      DATETIME       NOT NULL
+  valor           DECIMAL(12,2)  NOT NULL
+  qr_payload      VARCHAR(255)   NOT NULL
+  impreso         BOOLEAN        NOT NULL DEFAULT FALSE
+  reimpresiones   INT            NOT NULL DEFAULT 0
+  estado          VARCHAR(20)    NOT NULL DEFAULT 'GENERADO'  [GENERADO|IMPRESO|ANULADO]
+  creado_en       DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP
+  INDEX: idx_ticket_fecha (fecha_hora)
+
+TABLA: auditoria
+  Trazabilidad completa de acciones del sistema
+  ------------------------------------------------------------------
+  id              BIGINT PK AUTO_INCREMENT
+  usuario         VARCHAR(60)
+  accion          VARCHAR(40)    NOT NULL
+  entidad         VARCHAR(60)
+  entidad_id      VARCHAR(40)
+  detalle         VARCHAR(500)
+  resultado       VARCHAR(20)    NOT NULL DEFAULT 'OK'  [OK|ERROR|RECHAZADO]
+  ip              VARCHAR(45)
+  fecha_hora      DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP
+  INDEX: idx_aud_fecha (fecha_hora)
+  INDEX: idx_aud_usuario (usuario)
+  INDEX: idx_aud_accion (accion)
+
+TABLA: impresoras
+  Catalogo de impresoras configurable (ESC_POS, JAVA_PRINT, MOCK)
+  ------------------------------------------------------------------
+  id              BIGINT PK AUTO_INCREMENT
+  nombre          VARCHAR(120)   NOT NULL UNIQUE
+  tipo            VARCHAR(20)    NOT NULL DEFAULT 'ESC_POS'  [ESC_POS|JAVA_PRINT|MOCK]
+  destino         VARCHAR(150)
+  char_por_linea  INT            NOT NULL DEFAULT 42
+  por_defecto     BOOLEAN        NOT NULL DEFAULT FALSE
+  activo          BOOLEAN        NOT NULL DEFAULT TRUE
+  creado_en       DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP
+
+TABLA: dispositivos_biometricos
+  Catalogo de lectores biometricos (ZKTECO, SUPREMA, ANVIZ, HIKVISION, MOCK)
+  ------------------------------------------------------------------
+  id              BIGINT PK AUTO_INCREMENT
+  nombre          VARCHAR(120)   NOT NULL UNIQUE
+  marca           VARCHAR(30)    NOT NULL DEFAULT 'MOCK'
+  ip              VARCHAR(45)
+  puerto          INT
+  activo          BOOLEAN        NOT NULL DEFAULT TRUE
+  creado_en       DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP
+
+======================================================================
+  RELACIONES ENTRE TABLAS
+======================================================================
+
+  concesiones         1 --- *   empleados                (emplea)
+  concesiones         1 --- *   registros_alimentacion   (factura)
+  tipos_comida        1 --- *   horarios_comida          (define ventana)
+  tipos_comida        1 --- *   registros_alimentacion   (clasifica)
+  categorias_personal 1 --- *   empleados                (asigna limite)
+  empleados           1 --- *   registros_alimentacion   (consume)
+  empleados           1 --- *   control_consumo          (controla)
+  tipos_comida        1 --- *   control_consumo          (limita)
+  registros_alim.     1 --- 1   control_consumo          (respalda)
+  registros_alim.     1 --- 1   tickets                  (genera)
+  empleados           1 --- *   tickets                  (titular)
+  usuarios            1 --- *   registros_alimentacion   (registro manual)
+  usuarios            1 --- *   auditoria                (responsable)
+
+======================================================================
+  RESTRICCIONES CLAVE
+======================================================================
+
+  - control_consumo UNIQUE(empleado_id, fecha, secuencia):
+    Garantiza el limite diario por categoria incluso ante concurrencia.
+
+  - categorias_personal.limite_diario:
+    Define cuantos consumos por dia permite la categoria (NORMAL=1, ESPECIAL=2...)
+
+  - tickets.numero unico con formato RF-yyyyMMddHHmmss-NNNN
+
+  - empleados.codigo_biometrico y empleados.documento son unicos
+
+  - Borrado logico (campos activo/estado) para preservar historia
+
+======================================================================
+  USUARIOS POR DEFECTO (DataInitializer.java)
+======================================================================
+
+  admin       / admin123       -> ADMINISTRADOR
+  supervisor  / supervisor123  -> SUPERVISOR
+  operador    / operador123    -> OPERADOR
+  auditor     / auditor123     -> AUDITOR
+
+======================================================================
+  ENGINE: InnoDB | CHARSET: utf8mb4 | Motor: MySQL 8
+  ORM: Hibernate / Spring Data JPA | ddl-auto: none
+======================================================================
